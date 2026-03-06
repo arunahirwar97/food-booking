@@ -5,12 +5,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve static files from 'public' directory
+const publicPath = path.join(process.cwd(), 'public');
+app.use(express.static(publicPath));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`🍽  SAVOR server running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`SAVOR server running on port ${PORT}`);
+  console.log(`Serving files from: ${publicPath}`);
 });

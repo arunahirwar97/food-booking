@@ -4,6 +4,7 @@
   "description": "SAVOR — Premium Food Booking Website",
   "main": "server.js",
   "scripts": {
+    "build": "echo Build completed",
     "start": "node server.js",
     "dev": "node server.js"
   },
