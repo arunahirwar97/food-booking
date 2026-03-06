@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SAVOR — Fine Dining & Delivery</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--cream:#FDF6EC;--amber:#C8861A;--amber2:#E8A030;--charcoal:#1A1410;--dark:#241C14;--card:#2E2218;--border:rgba(200,134,26,0.25);--text:#FDF6EC;--muted:#A89880;--r:14px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--charcoal);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--charcoal)}::-webkit-scrollbar-thumb{background:var(--amber);border-radius:3px}
+#loader{position:fixed;inset:0;z-index:9999;background:var(--charcoal);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .7s,visibility .7s}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ldr-logo{font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:700;letter-spacing:12px;background:linear-gradient(135deg,var(--amber),var(--amber2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 1.8s ease infinite}
+@keyframes shimmer{0%,100%{filter:brightness(1)}50%{filter:brightness(1.4)}}
+.ldr-dots{display:flex;gap:10px}
+.ldr-dot{width:9px;height:9px;border-radius:50%;background:var(--amber);animation:ldrbounce .8s ease infinite}
+.ldr-dot:nth-child(2){animation-delay:.15s}.ldr-dot:nth-child(3){animation-delay:.3s}
+@keyframes ldrbounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-14px);opacity:1}}
+.ldr-txt{font-size:.75rem;letter-spacing:4px;color:var(--muted);text-transform:uppercase}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 5%;background:rgba(26,20,16,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:padding .3s}
+nav.slim{padding:13px 5%}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;letter-spacing:6px;color:var(--amber);cursor:pointer}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{color:rgba(253,246,236,.65);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--amber)}
+.nav-cta{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#fff;border:none;padding:11px 28px;border-radius:99px;font-weight:600;font-size:.875rem;cursor:pointer;transition:all .25s;font-family:'Outfit',sans-serif}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,134,26,.4)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px}
+.mob-menu{display:none;position:fixed;top:68px;inset-x:0;z-index:99;background:rgba(26,20,16,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);flex-direction:column}
+.mob-menu a{display:block;padding:16px 5%;font-size:1rem;font-weight:500;color:var(--text);text-decoration:none;border-bottom:1px solid var(--border);cursor:pointer}
+.mob-menu.open{display:flex}
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:130px 5% 80px;position:relative;overflow:hidden;gap:60px}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 65% 45%,rgba(200,134,26,.1),transparent 70%)}
+.hero-bg::after{content:'';position:absolute;top:-200px;right:-200px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(200,134,26,.07),transparent 70%);animation:rspin 25s linear infinite}
+@keyframes rspin{to{transform:rotate(360deg)}}
+.hero-left{position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(200,134,26,.1);border:1px solid var(--border);border-radius:99px;padding:8px 20px;margin-bottom:30px}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--amber2);animation:hpulse 2s ease infinite}
+@keyframes hpulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-eyebrow span{font-size:.72rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--amber2)}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,5.5vw,5.5rem);font-weight:700;line-height:1.0;margin-bottom:26px}
+.hero-h1 em{font-style:italic;color:var(--amber)}
+.hero-h1 .outline{-webkit-text-stroke:1.5px var(--amber);color:transparent}
+.hero-p{font-size:1rem;line-height:1.85;color:var(--muted);max-width:460px;margin-bottom:42px;font-weight:300}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:52px}
+.btn-gold{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#fff;border:none;padding:14px 34px;border-radius:99px;font-weight:600;font-size:.95rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(200,134,26,.4)}
+.btn-gold.full{width:100%;justify-content:center}
+.btn-out{background:transparent;color:var(--text);border:1px solid rgba(253,246,236,.2);padding:14px 34px;border-radius:99px;font-weight:500;font-size:.95rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.btn-out:hover{border-color:var(--amber);color:var(--amber)}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(46,34,24,.7);border:1px solid var(--border);border-radius:16px;overflow:hidden;backdrop-filter:blur(10px)}
+.hst{padding:18px 10px;text-align:center;border-right:1px solid var(--border)}
+.hst:last-child{border-right:none}
+.hst-n{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--amber)}
+.hst-l{font-size:.7rem;color:var(--muted);letter-spacing:1px;margin-top:4px}
+.hero-right{position:relative;z-index:1;display:flex;align-items:center;justify-content:center}
+.hero-vis{position:relative;width:400px;height:400px}
+.hero-circle{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3d2d1a,#130e08);border:1px solid var(--border);box-shadow:0 0 120px rgba(200,134,26,.18),inset 0 0 60px rgba(0,0,0,.5);animation:hfloat 5s ease-in-out infinite}
+@keyframes hfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+.hero-emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:7.5rem;filter:drop-shadow(0 20px 40px rgba(0,0,0,.6))}
+.hero-orbit{position:absolute;inset:-40px;border-radius:50%;border:1px dashed rgba(200,134,26,.18);animation:ospin 20s linear infinite}
+@keyframes ospin{to{transform:rotate(360deg)}}
+.ob{position:absolute;background:rgba(46,34,24,.95);border:1px solid var(--border);border-radius:12px;padding:10px 16px;font-size:.82rem;font-weight:600;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.ob1{top:0;left:50%;transform:translateX(-50%) translateY(-50%);animation:fbadge 3s ease-in-out infinite}
+.ob2{bottom:30px;left:-20px;animation:fbadge 3.5s ease-in-out infinite .5s}
+.ob3{top:50%;right:-30px;transform:translateY(-50%);animation:fbadge 4s ease-in-out infinite 1s}
+@keyframes fbadge{0%,100%{transform:translateY(var(--ty,0))}50%{transform:translateY(calc(var(--ty,0) - 10px))}}
+.ob1{--ty:-50%}.ob3{--ty:-50%}
+section{padding:100px 5%}
+.stag{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+.sh2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;line-height:1.1;margin-bottom:14px}
+.ssub{color:var(--muted);font-size:.95rem;line-height:1.7;max-width:520px;margin:0 auto}
+.shd{text-align:center;margin-bottom:60px}
+.mq-wrap{padding:18px 0;background:linear-gradient(135deg,var(--amber),var(--amber2));overflow:hidden;display:flex}
+.mq-track{display:flex;animation:mq 22s linear infinite;white-space:nowrap;min-width:max-content}
+@keyframes mq{to{transform:translateX(-50%)}}
+.mq-item{padding:0 40px;font-size:.78rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--charcoal);display:flex;align-items:center;gap:14px}
+.mq-sep{width:4px;height:4px;border-radius:50%;background:var(--charcoal);opacity:.4}
+#cats{padding:56px 5% 0}
+.cat-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.cpill{display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:99px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.875rem;font-weight:500;transition:all .22s;color:var(--muted)}
+.cpill:hover{border-color:var(--amber);color:var(--text)}
+.cpill.on{background:linear-gradient(135deg,var(--amber),var(--amber2));border-color:transparent;color:#fff;font-weight:600;transform:translateY(-2px);box-shadow:0 8px 22px rgba(200,134,26,.35)}
+#menu{padding-top:50px}
+.srch-wrap{max-width:480px;margin:0 auto 52px;position:relative}
+.srch-ico{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.srch{width:100%;padding:13px 20px 13px 46px;background:var(--card);border:1px solid var(--border);border-radius:99px;color:var(--text);font-size:.9rem;font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s}
+.srch:focus{border-color:var(--amber)}.srch::placeholder{color:var(--muted)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:22px}
+.mc{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:all .3s;animation:fup .4s ease both}
+.mc:hover{transform:translateY(-8px);border-color:rgba(200,134,26,.5);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+@keyframes fup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.mc-top{height:185px;display:flex;align-items:center;justify-content:center;font-size:5.5rem;position:relative;background:linear-gradient(135deg,rgba(46,34,24,1),rgba(30,22,14,1))}
+.mc-badge{position:absolute;top:12px;left:12px;background:linear-gradient(135deg,var(--amber),var(--amber2));color:#fff;font-size:.66rem;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:99px;text-transform:uppercase}
+.mc-veg{position:absolute;top:12px;right:12px;width:20px;height:20px;border-radius:4px;border:2px solid;display:flex;align-items:center;justify-content:center}
+.mc-veg.v{border-color:#4ade80;color:#4ade80}.mc-veg.nv{border-color:#f87171;color:#f87171}
+.mc-vdot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.mc-body{padding:18px}
+.mc-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:5px}
+.mc-desc{font-size:.8rem;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.mc-meta{display:flex;justify-content:space-between;margin-bottom:14px}
+.mc-r{font-size:.8rem;color:var(--amber2)}.mc-t{font-size:.78rem;color:var(--muted)}
+.mc-ft{display:flex;justify-content:space-between;align-items:center}
+.mc-price{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--amber)}
+.addbtn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--amber2));border:none;color:#fff;font-size:1.4rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.addbtn:hover{transform:scale(1.15);box-shadow:0 8px 20px rgba(200,134,26,.4)}
+.qctrl{display:flex;align-items:center;gap:8px}
+.qb{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:rgba(253,246,236,.05);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:.2s}
+.qb:hover{border-color:var(--amber);color:var(--amber)}
+.qn{font-weight:700;color:var(--amber);min-width:16px;text-align:center}
+.nores{grid-column:1/-1;text-align:center;padding:80px 0;color:var(--muted);font-size:1.05rem}
+#booking{background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.bk-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;max-width:1100px;margin:0 auto;align-items:start}
+.bk-desc{color:var(--muted);line-height:1.85;margin:18px 0 30px;font-weight:300;font-size:.95rem}
+.bfeats{display:flex;flex-direction:column;gap:11px;margin-bottom:32px}
+.bfeat{display:flex;align-items:center;gap:10px;font-size:.875rem;color:rgba(253,246,236,.72)}
+.bfeat::before{content:'✦';color:var(--amber);font-size:.65rem;flex-shrink:0}
+.hcard{background:rgba(46,34,24,.6);border:1px solid var(--border);border-radius:14px;padding:20px 24px}
+.hcard h4{font-size:.7rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+.hcard p{font-size:.85rem;color:var(--muted);margin-bottom:7px;display:flex;justify-content:space-between}
+.hcard p span{color:rgba(253,246,236,.75)}
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:36px}
+.fcard h3{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:600;margin-bottom:26px}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.fg label{font-size:.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.fi{background:rgba(253,246,236,.05);border:1px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;width:100%;resize:vertical}
+.fi:focus{border-color:var(--amber);background:rgba(200,134,26,.05)}
+.fi::placeholder{color:rgba(253,246,236,.22)}
+select.fi option{background:#241C14}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ok-msg{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:#4ade80;border-radius:10px;padding:13px 17px;margin-bottom:18px;font-size:.85rem;font-weight:500;animation:fup .3s ease}
+.err-msg{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#f87171;border-radius:10px;padding:13px 17px;margin-bottom:18px;font-size:.85rem;animation:fup .3s ease}
+#order{background:var(--charcoal)}
+.ord-layout{display:grid;grid-template-columns:1fr 390px;gap:28px;align-items:start}
+.ord-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px}
+.cart-box{background:var(--card);border:1px solid var(--border);border-radius:22px;position:sticky;top:96px;max-height:calc(100vh - 120px);display:flex;flex-direction:column;overflow:hidden}
+.cart-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.cart-hd h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600}
+.cart-badge{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#fff;width:26px;height:26px;border-radius:50%;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cart-body{flex:1;overflow-y:auto;padding:10px}
+.cart-empty{text-align:center;padding:36px 16px;color:var(--muted);font-size:.875rem;line-height:1.8}
+.ci{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(253,246,236,.05);animation:fup .25s ease}
+.ci-e{font-size:1.5rem;flex-shrink:0}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-price{font-size:.8rem;color:var(--amber)}
+.ci-qty{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.ci-qty button{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:.85rem;transition:.2s}
+.ci-qty button:hover{border-color:var(--amber);color:var(--amber)}
+.ci-qty span{font-size:.82rem;font-weight:700;color:var(--amber);min-width:14px;text-align:center}
+.cart-ft{padding:14px 18px;border-top:1px solid var(--border);flex-shrink:0}
+.ctr{display:flex;justify-content:space-between;font-size:.85rem;padding:5px 0;color:var(--muted)}
+.ctr.tot{font-size:1rem;font-weight:700;color:var(--text);border-top:1px solid var(--border);padding-top:10px;margin-top:5px}
+.pay-opts{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.po{display:flex;align-items:center;gap:8px;font-size:.85rem;cursor:pointer;color:rgba(253,246,236,.7)}
+.po input{accent-color:var(--amber)}
+.fab{position:fixed;bottom:26px;right:26px;z-index:200;background:linear-gradient(135deg,var(--amber),var(--amber2));color:#fff;border:none;padding:13px 24px;border-radius:99px;font-weight:700;font-size:.9rem;cursor:pointer;box-shadow:0 10px 40px rgba(200,134,26,.5);transition:all .25s;display:none;align-items:center;gap:9px;font-family:'Outfit',sans-serif}
+.fab:hover{transform:translateY(-3px)}
+.ord-ov{position:fixed;inset:0;z-index:1000;background:rgba(8,6,4,.92);backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:24px}
+.ord-ov.show{display:flex}
+.ord-card{background:var(--card);border:1px solid var(--border);border-radius:26px;padding:50px 42px;max-width:500px;width:100%;text-align:center;animation:popin .4s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes popin{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.oc-icon{font-size:4.5rem;margin-bottom:18px;animation:wiggle .6s ease .3s both}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-15deg)}75%{transform:rotate(15deg)}}
+.oc-title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:700;margin-bottom:10px}
+.oc-sub{color:var(--muted);margin-bottom:6px;line-height:1.65;font-size:.925rem}
+.oc-id{background:rgba(200,134,26,.12);border:1px solid var(--border);border-radius:99px;display:inline-block;padding:8px 22px;font-size:.82rem;color:var(--amber);margin:14px 0 26px}
+.track{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:30px}
+.ts{font-size:.76rem;padding:6px 13px;border-radius:99px;background:rgba(253,246,236,.06);color:var(--muted)}
+.ts.on{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#fff;font-weight:600}
+.ta{color:var(--muted);font-size:.75rem}
+#testimonials{background:var(--dark)}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:22px;max-width:960px;margin:0 auto}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;transition:transform .3s}
+.tc:hover{transform:translateY(-6px)}.tc.feat{border-color:rgba(200,134,26,.5);background:linear-gradient(135deg,var(--card),rgba(200,134,26,.06))}
+.tc-stars{color:var(--amber2);letter-spacing:3px;margin-bottom:13px;font-size:1rem}
+.tc p{color:rgba(253,246,236,.68);line-height:1.75;font-style:italic;margin-bottom:20px;font-size:.875rem}
+.tc-auth{display:flex;align-items:center;gap:12px}
+.tc-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--amber2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#fff;flex-shrink:0}
+.tc-auth b{display:block;font-size:.9rem}.tc-auth small{color:var(--muted);font-size:.76rem}
+#contact{background:var(--charcoal)}
+.ctgrid{display:grid;grid-template-columns:1fr 1fr;gap:80px;max-width:980px;margin:0 auto;align-items:start}
+.cinfo{display:flex;align-items:flex-start;gap:13px;margin-bottom:18px;font-size:.875rem;color:rgba(253,246,236,.7)}
+.cinfo-ico{width:36px;height:36px;border-radius:10px;background:rgba(200,134,26,.12);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.sls{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap}
+.sl{padding:9px 20px;border-radius:99px;border:1px solid var(--border);color:rgba(253,246,236,.6);font-size:.8rem;text-decoration:none;transition:all .2s;cursor:pointer;font-family:'Outfit',sans-serif}
+.sl:hover{border-color:var(--amber);color:var(--amber)}
+footer{background:#0E0A07;border-top:1px solid var(--border);padding:58px 5% 26px}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;margin-bottom:46px}
+.ft-logo{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;letter-spacing:6px;color:var(--amber);margin-bottom:13px}
+.ft-desc{color:var(--muted);font-size:.85rem;line-height:1.7;max-width:275px}
+.ft-links h4{font-size:.68rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--amber);margin-bottom:16px}
+.ft-links a{display:block;color:rgba(253,246,236,.5);text-decoration:none;font-size:.85rem;margin-bottom:10px;transition:color .2s;cursor:pointer}
+.ft-links a:hover{color:var(--amber)}
+.ft-bot{display:flex;justify-content:space-between;padding-top:22px;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted);flex-wrap:wrap;gap:10px}
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--card);border:1px solid var(--border);border-radius:99px;padding:11px 24px;font-size:.85rem;font-weight:500;z-index:3000;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.a{border-color:rgba(200,134,26,.5);color:var(--amber2)}
+@media(max-width:1024px){.bk-grid,.ctgrid{grid-template-columns:1fr;gap:48px}.ord-layout{grid-template-columns:1fr}.cart-box{position:static;max-height:none}.ft-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.nav-links,.nav-cta{display:none}.hamburger{display:flex}#hero{grid-template-columns:1fr;padding:110px 5% 60px;text-align:center;gap:40px}.hero-p{margin:0 auto 42px}.hero-btns{justify-content:center}.hero-right{display:none}.hero-stats{grid-template-columns:repeat(2,1fr)}.ft-grid{grid-template-columns:1fr;gap:28px}.ft-bot{flex-direction:column;text-align:center}.frow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="loader">
+  <div class="ldr-logo">SAVOR</div>
+  <div class="ldr-dots"><div class="ldr-dot"></div><div class="ldr-dot"></div><div class="ldr-dot"></div></div>
+  <div class="ldr-txt">Preparing your experience</div>
+</div>
+<nav id="nav">
+  <div class="nav-logo" onclick="scrollTo(0,0)">SAVOR</div>
+  <ul class="nav-links">
+    <li><a onclick="go('menu')">Menu</a></li>
+    <li><a onclick="go('booking')">Reserve</a></li>
+    <li><a onclick="go('order')">Order Online</a></li>
+    <li><a onclick="go('contact')">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="go('booking')">Book a Table</button>
+  <div class="hamburger" onclick="toggleMob()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mob-menu" id="mobM">
+  <a onclick="go('menu');closeMob()">Menu</a>
+  <a onclick="go('booking');closeMob()">Reserve a Table</a>
+  <a onclick="go('order');closeMob()">Order Online</a>
+  <a onclick="go('contact');closeMob()">Contact</a>
+</div>
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow"><div class="hero-dot"></div><span>Now Open · New Delhi</span></div>
+    <h1 class="hero-h1">Taste the<br/><em>Art of</em><br/><span class="outline">Fine Food</span></h1>
+    <p class="hero-p">An extraordinary dining experience where heritage recipes meet modern artistry. Reserve your table or get it delivered — perfection, your way.</p>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="go('booking')">🍽 Reserve a Table</button>
+      <button class="btn-out" onclick="go('order')">🛵 Order Delivery</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hst"><div class="hst-n">4.9★</div><div class="hst-l">Rating</div></div>
+      <div class="hst"><div class="hst-n">12K+</div><div class="hst-l">Guests</div></div>
+      <div class="hst"><div class="hst-n">85+</div><div class="hst-l">Dishes</div></div>
+      <div class="hst"><div class="hst-n">8yr</div><div class="hst-l">Legacy</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-vis">
+      <div class="hero-circle"></div>
+      <div class="hero-orbit"></div>
+      <div class="hero-emoji">🍝</div>
+      <div class="ob ob1">🔥 Chef's Special</div>
+      <div class="ob ob2">⭐ 4.9 Rating</div>
+      <div class="ob ob3">⏱ 25–35 min</div>
+    </div>
+  </div>
+</section>
+<div class="mq-wrap"><div class="mq-track" id="mq"></div></div>
+<section id="cats">
+  <div class="cat-row">
+    <div class="cpill on" onclick="setCat('all',this)">✦ All Items</div>
+    <div class="cpill" onclick="setCat('starters',this)">🥗 Starters</div>
+    <div class="cpill" onclick="setCat('mains',this)">🍛 Mains</div>
+    <div class="cpill" onclick="setCat('pasta',this)">🍝 Pasta</div>
+    <div class="cpill" onclick="setCat('grills',this)">🥩 Grills</div>
+    <div class="cpill" onclick="setCat('desserts',this)">🍰 Desserts</div>
+    <div class="cpill" onclick="setCat('drinks',this)">🍹 Drinks</div>
+  </div>
+</section>
+<section id="menu">
+  <div class="shd"><span class="stag">Our Signature</span><h2 class="sh2">Menu Collection</h2></div>
+  <div class="srch-wrap"><span class="srch-ico">🔍</span><input class="srch" type="text" placeholder="Search dishes, ingredients..." oninput="doSrch(this.value)"/></div>
+  <div class="mgrid" id="menuGrid"></div>
+</section>
+<section id="booking">
+  <div class="bk-grid">
+    <div>
+      <span class="stag">Reserve Your</span>
+      <h2 class="sh2" style="text-align:left">Perfect Evening</h2>
+      <p class="bk-desc">Join us for a curated dining journey. From intimate anniversaries to grand celebrations — we make every occasion unforgettable.</p>
+      <div class="bfeats">
+        <div class="bfeat">Instant booking confirmation via email</div>
+        <div class="bfeat">Free cancellation up to 2 hours before</div>
+        <div class="bfeat">Special occasion table decoration</div>
+        <div class="bfeat">Valet parking & sommelier on request</div>
+        <div class="bfeat">Private dining room available</div>
+      </div>
+      <div class="hcard">
+        <h4>Opening Hours</h4>
+        <p>Monday – Thursday <span>12:00 – 22:00</span></p>
+        <p>Friday – Saturday <span>12:00 – 23:30</span></p>
+        <p>Sunday <span>11:00 – 22:00</span></p>
+      </div>
+    </div>
+    <div class="fcard">
+      <h3>Book a Table</h3>
+      <div id="bOk" class="ok-msg" style="display:none"></div>
+      <div id="bErr" class="err-msg" style="display:none"></div>
+      <div class="fg"><label>Full Name *</label><input class="fi" id="bName" placeholder="e.g. Arjun Sharma"/></div>
+      <div class="frow">
+        <div class="fg"><label>Email *</label><input class="fi" type="email" id="bEmail" placeholder="you@email.com"/></div>
+        <div class="fg"><label>Phone</label><input class="fi" type="tel" id="bPhone" placeholder="+91 98765 43210"/></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Date *</label><input class="fi" type="date" id="bDate"/></div>
+        <div class="fg"><label>Time *</label>
+          <select class="fi" id="bTime"><option value="">Select time</option><option>12:00 PM</option><option>12:30 PM</option><option>1:00 PM</option><option>1:30 PM</option><option>2:00 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option><option>9:00 PM</option><option>9:30 PM</option></select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Guests</label>
+          <select class="fi" id="bGuests"><option>1 person</option><option selected>2 persons</option><option>3 persons</option><option>4 persons</option><option>5 persons</option><option>6 persons</option><option>7+ persons</option></select>
+        </div>
+        <div class="fg"><label>Occasion</label>
+          <select class="fi" id="bOcc"><option>Dinner</option><option>Birthday 🎂</option><option>Anniversary 💑</option><option>Business</option><option>Proposal 💍</option><option>Family</option></select>
+        </div>
+      </div>
+      <div class="fg"><label>Special Requests</label><textarea class="fi" id="bReq" rows="3" placeholder="Dietary restrictions, seating preferences, decorations..."></textarea></div>
+      <button class="btn-gold" style="width:100%;justify-content:center" onclick="submitBooking()">Confirm Reservation ✦</button>
+    </div>
+  </div>
+</section>
+<section id="order">
+  <div class="shd">
+    <span class="stag">Fast & Fresh</span>
+    <h2 class="sh2">Order Online</h2>
+    <p class="ssub">Delivered hot to your door in 25–40 minutes. Free delivery on orders above ₹599.</p>
+  </div>
+  <div class="ord-layout">
+    <div class="ord-grid" id="orderGrid"></div>
+    <div class="cart-box">
+      <div class="cart-hd"><h3>Your Order</h3><div class="cart-badge" id="cBadge">0</div></div>
+      <div class="cart-body" id="cBody"><div class="cart-empty">Your cart is empty.<br/>Start adding dishes! 🍽</div></div>
+      <div class="cart-ft" id="cFt" style="display:none">
+        <div class="ctr"><span>Subtotal</span><span id="cSub">₹0</span></div>
+        <div class="ctr"><span>Delivery</span><span>₹49</span></div>
+        <div class="ctr tot"><span>Total</span><span id="cTot">₹49</span></div>
+        <div style="margin:16px 0 0">
+          <div class="fg"><label>Delivery Address *</label><input class="fi" id="oAddr" placeholder="Full address with landmark"/></div>
+          <div class="frow">
+            <div class="fg"><label>Name *</label><input class="fi" id="oName" placeholder="Your name"/></div>
+            <div class="fg"><label>Phone *</label><input class="fi" id="oPh" placeholder="Phone no."/></div>
+          </div>
+        </div>
+        <div class="fg" style="margin-bottom:14px"><label>Payment</label>
+          <div class="pay-opts">
+            <label class="po"><input type="radio" name="pay" value="cod" checked/> Cash on Delivery</label>
+            <label class="po"><input type="radio" name="pay" value="upi"/> UPI / QR Code</label>
+            <label class="po"><input type="radio" name="pay" value="card"/> Credit / Debit Card</label>
+          </div>
+        </div>
+        <button class="btn-gold" style="width:100%;justify-content:center" onclick="placeOrder()">Place Order 🚀</button>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="ord-ov" id="ordOv">
+  <div class="ord-card">
+    <div class="oc-icon">🎉</div>
+    <div class="oc-title">Order Confirmed!</div>
+    <p class="oc-sub">Your food is being lovingly prepared and will arrive in <strong style="color:var(--amber2)">25–35 minutes</strong>.</p>
+    <div class="oc-id">Order #<span id="oId"></span></div>
+    <div class="track">
+      <div class="ts on">✅ Confirmed</div><div class="ta">→</div>
+      <div class="ts">👨‍🍳 Cooking</div><div class="ta">→</div>
+      <div class="ts">🛵 On Way</div><div class="ta">→</div>
+      <div class="ts">🏠 Delivered</div>
+    </div>
+    <button class="btn-gold" onclick="closeOrd()">Continue Browsing</button>
+  </div>
+</div>
+<section id="testimonials">
+  <div class="shd"><span class="stag">What People Say</span><h2 class="sh2">Guest Reviews</h2></div>
+  <div class="tgrid">
+    <div class="tc"><div class="tc-stars">★★★★★</div><p>"The truffle pasta is the most extraordinary thing I've eaten in Delhi. The ambiance feels like you've stepped into a Milanese restaurant. Absolutely stunning."</p><div class="tc-auth"><div class="tc-av">A</div><div><b>Arjun Mehta</b><small>Regular Guest</small></div></div></div>
+    <div class="tc feat"><div class="tc-stars">★★★★★</div><p>"We celebrated our 10th anniversary here. The team surprised us with rose petals and a custom dessert. The service was extraordinary — we felt like royalty the entire evening."</p><div class="tc-auth"><div class="tc-av">P</div><div><b>Priya & Rohan</b><small>Anniversary Dinner</small></div></div></div>
+    <div class="tc"><div class="tc-stars">★★★★★</div><p>"Ordered the wagyu and butter chicken for delivery — both arrived piping hot in 28 minutes. The packaging was beautiful. Fine dining delivered to your doorstep."</p><div class="tc-auth"><div class="tc-av">S</div><div><b>Sanya Kapoor</b><small>Delivery Customer</small></div></div></div>
+  </div>
+</section>
+<section id="contact">
+  <div class="ctgrid">
+    <div>
+      <span class="stag">Find Us</span>
+      <h2 class="sh2" style="text-align:left">Visit SAVOR</h2>
+      <div style="margin-top:28px">
+        <div class="cinfo"><div class="cinfo-ico">📍</div><span>12 Gourmet Lane, Connaught Place<br/>New Delhi – 110001</span></div>
+        <div class="cinfo"><div class="cinfo-ico">📞</div><span>+91 98765 43210</span></div>
+        <div class="cinfo"><div class="cinfo-ico">✉️</div><span>reservations@savordelhi.com</span></div>
+        <div class="cinfo"><div class="cinfo-ico">🕐</div><span>Mon–Sun: 12:00 PM – 11:30 PM</span></div>
+      </div>
+      <div class="sls"><a class="sl">Instagram</a><a class="sl">Facebook</a><a class="sl">Zomato</a><a class="sl">Swiggy</a></div>
+    </div>
+    <div class="fcard">
+      <h3>Send a Message</h3>
+      <div id="cOk" class="ok-msg" style="display:none">✅ Message sent! We'll reply within 24 hours.</div>
+      <div class="fg"><label>Name</label><input class="fi" id="cName" placeholder="Your name"/></div>
+      <div class="fg"><label>Email</label><input class="fi" type="email" id="cEmail" placeholder="you@email.com"/></div>
+      <div class="fg"><label>Message</label><textarea class="fi" id="cMsg" rows="5" placeholder="How can we help you?"></textarea></div>
+      <button class="btn-gold" style="width:100%;justify-content:center" onclick="sendMsg()">Send Message</button>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="ft-grid">
+    <div><div class="ft-logo">SAVOR</div><p class="ft-desc">Where every bite tells a story. Premium dining crafted with heritage recipes and the world's finest ingredients. Est. 2016, New Delhi.</p></div>
+    <div class="ft-links"><h4>Explore</h4><a onclick="go('menu')">Menu</a><a onclick="go('booking')">Reservations</a><a onclick="go('order')">Order Online</a><a onclick="go('contact')">Contact Us</a></div>
+    <div class="ft-links"><h4>Legal</h4><a>Privacy Policy</a><a>Terms of Service</a><a>Refund Policy</a><a>Allergen Info</a></div>
+  </div>
+  <div class="ft-bot"><span>© 2025 SAVOR Fine Dining. All rights reserved.</span><span>Made with ❤️ for food lovers</span></div>
+</footer>
+<button class="fab" id="fab" onclick="go('order')">🛒 Cart <span id="fabN">0</span></button>
+<div id="toast"></div>
+<script>
+const ITEMS=[
+  {id:1,name:"Burrata Caprese",desc:"Creamy burrata, heirloom tomatoes, basil, aged balsamic",price:349,cat:"starters",e:"🥗",r:"4.8",t:"15 min",veg:true,badge:"Popular"},
+  {id:2,name:"Truffle Arancini",desc:"Crispy risotto balls stuffed with black truffle & mozzarella",price:449,cat:"starters",e:"🍡",r:"4.9",t:"18 min",veg:true,badge:"Chef's Pick"},
+  {id:3,name:"Seared Scallops",desc:"Pan-seared scallops, pea purée, crispy pancetta, micro greens",price:599,cat:"starters",e:"🍤",r:"4.8",t:"12 min",veg:false,badge:"Seasonal"},
+  {id:4,name:"Mushroom Crostini",desc:"Sourdough, garlic-herb wild mushrooms, parmesan, rocket",price:279,cat:"starters",e:"🍞",r:"4.6",t:"10 min",veg:true},
+  {id:5,name:"Butter Chicken",desc:"Slow-cooked chicken in rich, velvety tomato-butter masala",price:549,cat:"mains",e:"🍛",r:"4.9",t:"28 min",veg:false,badge:"Bestseller"},
+  {id:6,name:"Dal Makhani",desc:"Black lentils slow-cooked overnight in buttery tomato gravy",price:399,cat:"mains",e:"🫕",r:"4.8",t:"22 min",veg:true},
+  {id:7,name:"Lamb Rogan Josh",desc:"Kashmiri-spiced slow-braised lamb, aromatic whole spices",price:699,cat:"mains",e:"🍲",r:"4.7",t:"38 min",veg:false,badge:"House Special"},
+  {id:8,name:"Paneer Makhani",desc:"Cottage cheese in velvety saffron-tomato cream sauce",price:429,cat:"mains",e:"🧀",r:"4.8",t:"22 min",veg:true},
+  {id:9,name:"Truffle Tagliatelle",desc:"Fresh pasta, black truffle cream, parmesan, porcini",price:749,cat:"pasta",e:"🍝",r:"4.9",t:"20 min",veg:true,badge:"Signature"},
+  {id:10,name:"Lobster Linguine",desc:"Fresh lobster, cherry tomatoes, chilli, garlic, white wine",price:999,cat:"pasta",e:"🦞",r:"4.8",t:"25 min",veg:false,badge:"Premium"},
+  {id:11,name:"Pesto Rigatoni",desc:"Homemade basil pesto, pine nuts, sun-dried tomatoes, parmesan",price:459,cat:"pasta",e:"🌿",r:"4.7",t:"18 min",veg:true},
+  {id:12,name:"Wagyu Ribeye",desc:"A5 Japanese wagyu 200g, chimichurri, truffle fries, jus",price:2499,cat:"grills",e:"🥩",r:"5.0",t:"32 min",veg:false,badge:"Premium"},
+  {id:13,name:"Tandoori Chicken",desc:"Half chicken marinated 48h in yogurt-spice mix, mint chutney",price:599,cat:"grills",e:"🍗",r:"4.8",t:"30 min",veg:false,badge:"Bestseller"},
+  {id:14,name:"Grilled Sea Bass",desc:"Whole sea bass, lemon-herb butter, capers, seasonal veg",price:899,cat:"grills",e:"🐟",r:"4.7",t:"28 min",veg:false},
+  {id:15,name:"Creme Brulee",desc:"Classic Tahitian vanilla custard, caramelised sugar crust",price:349,cat:"desserts",e:"🍮",r:"4.9",t:"8 min",veg:true,badge:"Classic"},
+  {id:16,name:"Chocolate Fondant",desc:"Dark chocolate lava cake, vanilla bean ice cream, raspberries",price:399,cat:"desserts",e:"🍫",r:"4.9",t:"14 min",veg:true,badge:"Must Try"},
+  {id:17,name:"Gulab Jamun Cheesecake",desc:"Fusion cheesecake, rose syrup, cardamom gulab jamun",price:329,cat:"desserts",e:"🍰",r:"4.8",t:"5 min",veg:true},
+  {id:18,name:"Mango Alphonso Lassi",desc:"Fresh Alphonso mango, yogurt, saffron, crushed cardamom",price:249,cat:"drinks",e:"🥭",r:"4.8",t:"5 min",veg:true,badge:"Summer"},
+  {id:19,name:"Masala Chai Latte",desc:"Spiced tea blend, steamed whole milk, cinnamon, honey",price:199,cat:"drinks",e:"☕",r:"4.7",t:"5 min",veg:true},
+  {id:20,name:"Virgin Mojito",desc:"Fresh lime, muddled mint, soda water, lychee, crushed ice",price:229,cat:"drinks",e:"🍹",r:"4.6",t:"5 min",veg:true},
+];
+let cart={},curCat='all',srchQ='';
+window.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>document.getElementById('loader').classList.add('gone'),2200);
+  renderG('menuGrid',false); renderG('orderGrid',true);
+  const mq=document.getElementById('mq');
+  const words=['Fine Dining','Table Reservations','Online Delivery','Chefs Special','Fresh Ingredients','Premium Experience','Award-Winning','Handcrafted'];
+  const inner=[...words,...words].map(x=>`<span class="mq-item">${x}<span class="mq-sep"></span></span>`).join('');
+  mq.innerHTML=inner+inner;
+  window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('slim',scrollY>50));
+  const d=document.getElementById('bDate'); if(d)d.min=new Date().toISOString().split('T')[0];
+});
+function renderG(gid,isOrd){
+  const g=document.getElementById(gid); if(!g)return;
+  const list=ITEMS.filter(i=>(curCat==='all'||i.cat===curCat)&&(!srchQ||i.name.toLowerCase().includes(srchQ)||i.desc.toLowerCase().includes(srchQ)));
+  if(!list.length){g.innerHTML='<div class="nores">No dishes found for your search 😕</div>';return;}
+  g.innerHTML=list.map((item,idx)=>`
+    <div class="mc" style="animation-delay:${idx*.04}s">
+      <div class="mc-top"><span>${item.e}</span>${item.badge?`<span class="mc-badge">${item.badge}</span>`:''}<span class="mc-veg ${item.veg?'v':'nv'}"><span class="mc-vdot"></span></span></div>
+      <div class="mc-body">
+        <div class="mc-name">${item.name}</div>
+        <div class="mc-desc">${item.desc}</div>
+        <div class="mc-meta"><span class="mc-r">★ ${item.r}</span><span class="mc-t">⏱ ${item.t}</span></div>
+        <div class="mc-ft"><span class="mc-price">&#8377;${item.price}</span>${isOrd?ctrlH(item.id):`<button class="addbtn" onclick="qAdd(${item.id})">+</button>`}</div>
+      </div>
+    </div>`).join('');
+}
+function ctrlH(id){const q=cart[id]?.qty||0;return q?`<div class="qctrl"><button class="qb" onclick="chQ(${id},-1)">&#8722;</button><span class="qn">${q}</span><button class="qb" onclick="chQ(${id},1)">+</button></div>`:`<button class="addbtn" onclick="addI(${id})">+</button>`;}
+function setCat(cat,el){curCat=cat;document.querySelectorAll('.cpill').forEach(p=>p.classList.remove('on'));el.classList.add('on');renderG('menuGrid',false);renderG('orderGrid',true);}
+function doSrch(v){srchQ=v.trim().toLowerCase();renderG('menuGrid',false);}
+function qAdd(id){toast(`Added to cart! 🛒`,'a');go('order');setTimeout(()=>addI(id),500);}
+function addI(id){const item=ITEMS.find(i=>i.id===id);if(!cart[id])cart[id]={...item,qty:0};cart[id].qty++;syncC();renderG('orderGrid',true);toast(`${item.name} added ✦`,'a');}
+function chQ(id,d){if(!cart[id])return;cart[id].qty+=d;if(cart[id].qty<=0)delete cart[id];syncC();renderG('orderGrid',true);}
+function syncC(){
+  const items=Object.values(cart);
+  const count=items.reduce((s,i)=>s+i.qty,0);
+  const sub=items.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById('cBadge').textContent=count;
+  document.getElementById('fabN').textContent=count;
+  const fab=document.getElementById('fab');
+  fab.style.display=count>0?'inline-flex':'none';
+  const body=document.getElementById('cBody'),ft=document.getElementById('cFt');
+  if(!items.length){body.innerHTML='<div class="cart-empty">Your cart is empty.<br/>Start adding dishes! 🍽</div>';ft.style.display='none';return;}
+  ft.style.display='block';
+  body.innerHTML=items.map(i=>`<div class="ci"><span class="ci-e">${i.e}</span><div class="ci-info"><div class="ci-name">${i.name}</div><div class="ci-price">&#8377;${i.price*i.qty}</div></div><div class="ci-qty"><button onclick="chQ(${i.id},-1)">&#8722;</button><span>${i.qty}</span><button onclick="chQ(${i.id},1)">+</button></div></div>`).join('');
+  document.getElementById('cSub').textContent=`&#8377;${sub}`;
+  document.getElementById('cTot').textContent=`&#8377;${sub+49}`;
+}
+function submitBooking(){
+  const name=v('bName'),email=v('bEmail'),date=v('bDate'),time=v('bTime');
+  hide('bOk');hide('bErr');
+  if(!name||!email||!date||!time){show('bErr','Please fill in all required fields (Name, Email, Date, Time).');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){show('bErr','Please enter a valid email address.');return;}
+  show('bOk',`Booking confirmed for ${name} on ${new Date(date+'T12:00:00').toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} at ${time}! Confirmation sent to ${email}.`);
+  ['bName','bEmail','bPhone','bDate','bTime','bReq'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  toast('Reservation confirmed! 🍽','a');
+  setTimeout(()=>hide('bOk'),8000);
+}
+function placeOrder(){
+  if(!Object.keys(cart).length){toast('Cart is empty! Add some dishes 🛒');return;}
+  const addr=v('oAddr'),name=v('oName'),ph=v('oPh');
+  if(!addr||!name||!ph){toast('Please fill in delivery details');return;}
+  document.getElementById('oId').textContent=Math.floor(Math.random()*900000+100000);
+  document.getElementById('ordOv').classList.add('show');
+  cart={};syncC();renderG('orderGrid',true);
+  ['oAddr','oName','oPh'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+}
+function closeOrd(){document.getElementById('ordOv').classList.remove('show');}
+function sendMsg(){
+  const n=v('cName'),e=v('cEmail'),m=v('cMsg');hide('cOk');
+  if(!n||!e||!m){toast('Please fill in all fields');return;}
+  show('cOk',"Message sent! We'll get back to you within 24 hours.");
+  ['cName','cEmail','cMsg'].forEach(id=>document.getElementById(id).value='');
+  setTimeout(()=>hide('cOk'),6000);
+}
+function go(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});}
+function v(id){return document.getElementById(id)?.value.trim()||'';}
+function show(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.style.display='block';}}
+function hide(id){const e=document.getElementById(id);if(e)e.style.display='none';}
+function toggleMob(){document.getElementById('mobM').classList.toggle('open');}
+function closeMob(){document.getElementById('mobM').classList.remove('open');}
+let tT;
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast show '+(type||'');
+  clearTimeout(tT);tT=setTimeout(()=>el.className='toast',3200);
+}
+</script>
+</body>
+</html>
